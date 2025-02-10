@@ -76,10 +76,12 @@ public class HashSet<K> {
         if (this.buckets[bucketIndex] == null)
             this.buckets[bucketIndex] = new LinkedList<>();
         // TASK: Dedupe step...YOU HAVE THIS, I DON'T...
-        this.buckets[bucketIndex].add(key);
-        count++;
-        if (needsResized())
-            resize();
+        if (!this.buckets[bucketIndex].contains(key)) {
+            this.buckets[bucketIndex].add(key);
+            count++;
+            if (needsResized())
+                resize();
+        }
     }
 
     private void resize() {
@@ -134,8 +136,18 @@ public class HashSet<K> {
 
     // this U b
     public HashSet<K> union(HashSet<K> b) {
-        // TODO:
-        return null;
+        HashSet<K> union = new HashSet<>(this.size() + b.size());
+
+        Iterator<K> firstIteraction = this.iterator();
+        while (firstIteraction.hasNext()) {
+            union.add(firstIteraction.next());
+        }
+
+        Iterator<K> secondIteraction = b.iterator();
+        while (secondIteraction.hasNext()) {
+            union.add(secondIteraction.next());
+        }
+        return union;
     }
 
     // this I b
@@ -170,11 +182,18 @@ public class HashSet<K> {
 
     public static void main(String[] args) {
         HashSet<String> data = new HashSet<>(2);
+        HashSet<String> data1 = new HashSet<>(2);
         data.add("A");
         data.add("B");
         data.add("C");
         data.add("D");
-        System.out.println(data);
+     //   System.out.println(data);
+
+
+        data1.add("B");
+        data1.add("C");
+        System.out.println("union -> " + data.union(data1));
+
 
         Iterator<String> i = data.iterator();
         while (i.hasNext())
